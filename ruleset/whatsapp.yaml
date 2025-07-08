@@ -14,7 +14,9 @@ payload:
   - DOMAIN-SUFFIX,stickers.whatsapp.net
   - DOMAIN-SUFFIX,v.whatsapp.net
   - DOMAIN-KEYWORD,whatsapp
+  # 下列是 WhatsApp 常用 CDN 域名（必要时开启）
   - DOMAIN-SUFFIX,fbcdn.net
   - DOMAIN-SUFFIX,facebook.com
   - DOMAIN-SUFFIX,facebook.net
   - DOMAIN-SUFFIX,fbsbx.com
+
