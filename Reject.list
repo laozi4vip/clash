@@ -1,4 +1,4 @@
-payload:
+
   # 域名关键词拦截
   - DOMAIN-KEYWORD,bilibili
   - DOMAIN-KEYWORD,upos
