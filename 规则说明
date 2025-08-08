@@ -1,0 +1,171 @@
+#路由规则
+规则将按照从上到下的顺序匹配，匹配到规则不再往下匹配。
+如请求为 udp，而代理节点没有 udp 支持 (例如`ss`节点没写`udp: true`),则会继续向下匹配
+出站策略：
+DIRECT、REJECT、策略组名字、节点名字、sub-rule
+  rules:
+	- DOMAIN-SUFFIX,google.com,Proxy  #匹配域名后缀(交由Proxy代理服务器组)
+	- DOMAIN,google.com,REJECT  #匹配域名(拒绝)
+	- DOMAIN-KEYWORD,google,Proxy  #匹配域名关键字(交由Proxy代理服务器组)
+	- IP-CIDR,127.0.0.0/8,DIRECT  #匹配数据目标IP(直连)
+	- SRC-IP-CIDR,192.168.1.201/32,direct-wan1  #匹配数据发起IP(走WAN1口直连)
+	- DST-PORT,80,DIRECT  #匹配数据目标端口(直连)（114-514/810-1919,65530）
+	- SRC-PORT,7777,DIRECT  #匹配数据源端口(直连)
+	- NETWORK,udp,DIRECT  #网络协议匹配
+	- DSCP,4,DIRECT  #DSCP标记匹配 (仅限 tproxy udp 入站)
+	- AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT  #同时满足要求匹配
+	- OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #满足任意要求匹配
+	- NOT,((DOMAIN,baidu.com)),PROXY  #不匹配 baidu.com 的域名(交由Proxy代理服务器组)
+	- RULE-SET,youtube,proxy  #规则集匹配
+	- GEOSITE,youtube,PROXY  #GEOSITE数据库匹配
+	- GEOIP,CN,DIRECT  #GEOIP数据库匹配
+	- IP-ASN,13335,DIRECT  #目标ASN匹配(ASN数据库)
+	- IN-TYPE,SOCKS/HTTP,PROXY
+	- PROCESS-NAME,chrome.exe,PROXY
+	- SUB-RULE,(NETWORK,tcp),sub-rule  #子规则匹配
+	- MATCH,auto
+
+
+##子规则匹配原理
+  - SUB-RULE,(OR,((NETWORK,TCP),(NETWORK,UDP))),sub-rule-name1
+  - SUB-RULE,(AND,((NETWORK,UDP))),sub-rule-name2
+# 定义多个子规则集，规则将以分叉匹配，使用 SUB-RULE 使用
+#                                               google.com(not match)--> baidu.com(match)
+#                                                /                                ｜
+#                                               /                                 ｜
+#  https://baidu.com  -->rule-->  sub-rule-name1(match tcp)                   使用 DIRECT
+#
+#
+#                                              google.com(not match)--> baidu.com(not match)
+#                                                /                            ｜
+#                                               /                             ｜
+#  dns 1.1.1.1  -->rule-->  sub-rule-name1(match udp)               sub-rule-name2(match udp)
+#                                                                             ｜
+#                                                                             ｜
+#                                                                 使用 REJECT <-- 1.1.1.1/32(match)
+#
+
+
+
+
+
+
+
+##子规则内容
+sub-rules:
+  sub-rule-name1:
+    - DOMAIN,google.com,ss1
+    - DOMAIN,baidu.com,DIRECT
+  sub-rule-name2:
+    - IP-CIDR,1.1.1.1/32,REJECT
+    - IP-CIDR,8.8.8.8/32,ss1
+    - DOMAIN,dns.alidns.com,REJECT
+
+
+
+规则集：
+
+rule-providers:
+  google:
+    type: http
+    path: ./rule1.yaml
+    url: "https://raw.githubusercontent.com/../Google.yaml"
+    interval: 600
+    proxy: DIRECT
+    behavior: classical
+    format: yaml
+    payload:
+      - 'DOMAIN-SUFFIX,google.com'
+
+
+二进制转换：
+
+##域名list转换为二进制
+mihomo convert-ruleset domain text XXX.list XXX.mrs
+##ip-list转换为二进制
+mihomo convert-ruleset ipcidr text XXX.list XXX.mrs
+##二进制转换为list （目前不支持yaml反向转换）
+mihomo convert-ruleset domain text XXX.mrs XXX.list
+##域名yaml转换为二进制
+mihomo convert-ruleset domain yaml XXX.yaml XXX.mrs
+
+
+
+
+
+classical格式（text）：
+DOMAIN-SUFFIX,google.com
+DOMAIN-KEYWORD,google
+DOMAIN,ad.com
+SRC-IP-CIDR,192.168.1.201/32
+IP-CIDR,127.0.0.0/8
+GEOIP,CN
+DST-PORT,80
+SRC-PORT,7777
+
+
+
+
+domain格式（text）：
+*
++.microsoft.com
+.blogger.com
+*.*.microsoft.com
+books.itunes.apple.com
+
+
+ipcidr格式（text）：
+
+192.168.1.0/24
+10.0.0.0.1/32
+
+
+yaml格式：
+
+payload:
+- '.blogger.com'
+- '*.*.microsoft.com'
+- 'books.itunes.apple.com'
+
+通配符：
+使用通配符时，应当使用引号 ' '或 " "将内容包裹起来
+
+通配符 *
+Clash 的通配符 * 一次只能匹配一级域名
+*.baidu.com 只匹配 tieba.baidu.com 而不匹配 123.tieba.baidu.com 或者 baidu.com
+*只匹配 localhost 等没有.的主机名
+通配符 +
+通配符 ＋ 类似 DOMAIN-SUFFIX, 可以一次性匹配多个级别
+＋.baidu.com 匹配 tieba.baidu.com 和 123.tieba.baidu.com 或者 baidu.com
+通配符 ＋ 只能用于域名前缀匹配
+通配符 .
+通配符 . 可以一次性匹配多个级别
+.baidu.com 匹配 tieba.baidu.com 和 123.tieba.baidu.com, 但不能匹配 baidu.com
+通配符 . 只能用于域名前缀匹配
+
+规则集获取：
+
+新格式二进制：
+https://github.com/MetaCubeX/meta-rules-dat/tree/meta
+老格式：
+https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash
+
+可创建负载均衡组 简单实现双宽带利用
+proxies:
+- name: "direct-wan1"
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: eth0
+- name: "direct-wan2"
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: eth1
+
+
+
+
+
+
+
