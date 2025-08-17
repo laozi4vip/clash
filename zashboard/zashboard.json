@@ -22,7 +22,7 @@
   "config/connecticon-table-size": "small",
   "config/display-latency-in-rule": "true",
   "config/scroll-animation-effect": "true",
-  "config/custom-background-image": "",
+  "config/custom-background-image": "https://raw.githubusercontent.com/laozi4vip/clash/refs/heads/main/list/bj.png",
   "config/log-retention-limit": "1000",
   "config/medium-latency": "800",
   "config/number-of-charts-in-sidebar": "2",
