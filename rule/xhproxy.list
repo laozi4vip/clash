@@ -1,3 +1,9 @@
 #google
 DOMAIN-KEYWORD,googleapis
 DOMAIN-SUFFIX,googleapis.com
+DOMAIN-SUFFIX,googleapis.cn
+DOMAIN,clients3.google.com
+DOMAIN,android.apis.google.com
+DOMAIN,play.google.com
+DOMAIN,update.googleapis.com
+DOMAIN,mtalk.google.com
