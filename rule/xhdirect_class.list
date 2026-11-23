@@ -17,6 +17,7 @@ DOMAIN-KEYWORD,feimao
 DOMAIN-KEYWORD,xiaomi
 
 # 域名后缀匹配
+DOMAIN-SUFFIX,xmy7.com  #小蚂蚁资源网
 DOMAIN-SUFFIX,jiaosf.com  #教私服
 # MyList
 time.windows.com
