@@ -1,7 +1,6 @@
 # 直连补充列表(国内域名不解析时，防止走代理使用)
 
 # 域名关键字匹配
-DOMAIN-KEYWORD,jiaosf  #教私服
 DOMAIN-KEYWORD,henghost #恒创科技服务器
 DOMAIN-KEYWORD,logpyzqzs #最强祖师
 DOMAIN-KEYWORD,pan
@@ -17,9 +16,10 @@ DOMAIN-KEYWORD,feimao
 #小米
 DOMAIN-KEYWORD,xiaomi
 
-# MyList
 # 域名后缀匹配
-DOMAIN-SUFFIX,time.windows.com
+DOMAIN-SUFFIX,jiaosf.com  #教私服
+# MyList
+time.windows.com
 DOMAIN-SUFFIX,lanzov.com
 DOMAIN-SUFFIX,hao123.com
 # DOMAIN-SUFFIX,xn--ngstr-lra8j.com
