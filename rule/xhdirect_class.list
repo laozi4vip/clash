@@ -1,29 +1,32 @@
 # 直连补充列表(国内域名不解析时，防止走代理使用)
 
-# 域名关键字匹配
-DOMAIN-KEYWORD,henghost #恒创科技服务器
-DOMAIN-KEYWORD,logpyzqzs #最强祖师
-DOMAIN-KEYWORD,pan
-DOMAIN-KEYWORD,danmu
-#DOMAIN-KEYWORD,xing
+########域名关键字匹配########
+#小蚂蚁资源网
+DOMAIN-KEYWORD,xmy7
+#教私服
+DOMAIN-KEYWORD,jiaosf
+#恒创科技服务器
+DOMAIN-KEYWORD,henghost 
+#最强祖师
+DOMAIN-KEYWORD,logpyzqzs 
 #域名
 DOMAIN-KEYWORD,xinghui
 #玩偶
 DOMAIN-KEYWORD,wogg
+DOMAIN-KEYWORD,pan
+DOMAIN-KEYWORD,danmu
+DOMAIN-KEYWORD,xing
 #肥猫
 DOMAIN-KEYWORD,feimao
-
 #小米
 DOMAIN-KEYWORD,xiaomi
 
-# 域名后缀匹配
-DOMAIN-SUFFIX,xmy7.com  #小蚂蚁资源网
-DOMAIN-SUFFIX,jiaosf.com  #教私服
+########域名后缀匹配########
 # MyList
-time.windows.com
+DOMAIN-SUFFIX,time.windows.com
 DOMAIN-SUFFIX,lanzov.com
 DOMAIN-SUFFIX,hao123.com
-# DOMAIN-SUFFIX,xn--ngstr-lra8j.com
+DOMAIN-SUFFIX,xn--ngstr-lra8j.com
 DOMAIN-SUFFIX,aerianas.top
 DOMAIN-SUFFIX,sssyun.xyz
 DOMAIN-SUFFIX,qeayr.cn
